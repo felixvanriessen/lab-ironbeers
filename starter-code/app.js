@@ -1,9 +1,10 @@
 const express = require('express');
+const app = express();
+
 const hbs = require('hbs');
 const path = require('path');
-const PunkAPIWrapper = require('punkapi-javascript-wrapper');
 
-const app = express();
+const PunkAPIWrapper = require('punkapi-javascript-wrapper');
 const punkAPI = new PunkAPIWrapper();
 // let testData = [{name:'JON'}, {name:'ALEX'}]
 
@@ -19,26 +20,14 @@ hbs.registerPartials(__dirname + '/views/partials')
 // add the routes here:
 app.get('/', (req, res) => res.render('index'));
 
+// let indexRoute = require('./routes/home.js')
+// app.use('/', indexRoute)
+
+app.use('/', require('./routes/home.js'))
+app.use('/', require('./routes/beers.js'))
+app.use('/', require('./routes/random-beers.js'))
 
 
-app.get('/beers', (req,res)=>{
-     punkAPI
-    .getBeers()
-    .then(beersFromApi =>{
-         res.render('beers', {beer: beersFromApi});
-    })
-    .catch(error => console.log(error))
-})
-
-app.get('/random-beers', (req,res)=>{
-    punkAPI
-    .getRandom()
-    .then(randomBeer =>{
-        // console.log('Random beer = ' + randomBeer[0].brewers_tips)
-        res.render('random-beers', {beer:randomBeer[0]})
-    })
-    .catch(error => console.log(error))
-})
 
 app.get('/beers/:id', (req,res)=>{
     punkAPI
@@ -50,3 +39,5 @@ app.get('/beers/:id', (req,res)=>{
 })
 
 app.listen(3000, () => console.log('listening on port 3k'));
+
+
